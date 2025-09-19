@@ -24,9 +24,13 @@ export default function Dashboard() {
     try {
       const url = new URL(location.origin + "/api/search");
       url.searchParams.set("query", query);
-      const r = await fetch(url.toString());
-      const json = (await r.json()) as SearchResponse;
-      setData(json);
+      try {
+        const { fetchJson } = await import("@/lib/fetch");
+        const json = (await fetchJson(url.toString())) as SearchResponse;
+        setData(json);
+      } catch (e) {
+        console.error("Search failed:", e);
+      }
     } finally {
       setLoading(false);
     }
