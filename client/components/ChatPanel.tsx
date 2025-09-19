@@ -17,25 +17,8 @@ export default function ChatPanel() {
     setData(null);
     try {
       try {
-        const r = await fetch("/api/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ query }),
-        });
-        const ct = r.headers.get("content-type") || "";
-        const text = await r.text();
-        if (!r.ok) {
-          try {
-            const parsed = JSON.parse(text);
-            throw new Error(parsed?.error || parsed?.message || "Request failed");
-          } catch {
-            throw new Error(`Chat request failed: ${text.slice(0, 200)}`);
-          }
-        }
-        if (!ct.includes("application/json") && !text.trim().startsWith("{") && !text.trim().startsWith("[")) {
-          throw new Error("Expected JSON response from /api/chat but received HTML or text. Check server routes.");
-        }
-        const json = JSON.parse(text);
+        const { apiPost } = await import("@/lib/api");
+        const json = await apiPost<ChatResponse>("/chat", { query });
         setData(json as ChatResponse);
       } catch (e: any) {
         throw e;
