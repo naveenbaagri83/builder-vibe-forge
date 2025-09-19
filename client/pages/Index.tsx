@@ -13,10 +13,10 @@ export default function Index() {
   useEffect(() => {
     (async () => {
       try {
-        const { fetchJson } = await import("@/lib/fetch");
+        const { apiGet } = await import("@/lib/api");
         const [sr, ar] = await Promise.all([
-          fetchJson("/api/search?query=space%20biology"),
-          fetchJson("/api/articles"),
+          apiGet(`/search?${new URLSearchParams({ query: "space biology" }).toString()}`),
+          apiGet(`/articles`),
         ]);
         setExperiments(sr as SearchResponse);
         setArticles(ar as ArticlesResponse);
