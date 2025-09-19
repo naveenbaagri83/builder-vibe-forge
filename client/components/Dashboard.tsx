@@ -22,11 +22,10 @@ export default function Dashboard() {
   const onSearch = async () => {
     setLoading(true);
     try {
-      const url = new URL(location.origin + "/api/search");
-      url.searchParams.set("query", query);
       try {
-        const { fetchJson } = await import("@/lib/fetch");
-        const json = (await fetchJson(url.toString())) as SearchResponse;
+        const { apiGet } = await import("@/lib/api");
+        const qp = new URLSearchParams({ query });
+        const json = (await apiGet(`/search?${qp.toString()}`)) as SearchResponse;
         setData(json);
       } catch (e) {
         console.error("Search failed:", e);
