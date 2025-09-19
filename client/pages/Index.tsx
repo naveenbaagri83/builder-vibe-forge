@@ -13,14 +13,15 @@ export default function Index() {
   useEffect(() => {
     (async () => {
       try {
+        const { fetchJson } = await import("@/lib/fetch");
         const [sr, ar] = await Promise.all([
-          fetch("/api/search?query=space%20biology").then((r) => r.json()),
-          fetch("/api/articles").then((r) => r.json()),
+          fetchJson("/api/search?query=space%20biology"),
+          fetchJson("/api/articles"),
         ]);
         setExperiments(sr as SearchResponse);
         setArticles(ar as ArticlesResponse);
       } catch (e) {
-        console.error(e);
+        console.error("Initial data load failed:", e);
       }
     })();
   }, []);
