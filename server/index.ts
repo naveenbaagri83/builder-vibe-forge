@@ -24,6 +24,7 @@ export function createServer() {
   app.get("/api/demo", handleDemo);
 
   // Space Biology KE APIs
+  app.get("/api/chat", handleChat);
   app.post("/api/chat", handleChat);
   app.get("/api/search", handleSearch);
   app.post("/api/search", handleSearch);
