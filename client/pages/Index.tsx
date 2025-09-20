@@ -3,6 +3,7 @@ import ChatPanel from "@/components/ChatPanel";
 import Dashboard from "@/components/Dashboard";
 import ExperimentCard from "@/components/ExperimentCard";
 import ArticleCard from "@/components/ArticleCard";
+import HistoryBookmarks from "@/components/HistoryBookmarks";
 import type { ArticlesResponse, SearchResponse } from "@shared/api";
 import { Link } from "react-router-dom";
 
