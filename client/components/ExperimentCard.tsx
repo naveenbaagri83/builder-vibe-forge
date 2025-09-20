@@ -1,21 +1,39 @@
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { SourceDoc } from "@shared/api";
 import { Link } from "react-router-dom";
 
 export default function ExperimentCard({ exp }: { exp: SourceDoc }) {
-  const [saved, setSaved] = useState<boolean>(() => {
-    try { return (require("@/lib/storage") as any).isBookmarked(exp.id); } catch { return false; }
-  });
+  const [saved, setSaved] = useState<boolean>(false);
 
-  const toggle = (e: React.MouseEvent) => {
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const { isBookmarked } = await import("@/lib/storage");
+        if (!mounted) return;
+        setSaved(Boolean(isBookmarked(exp.id)));
+      } catch {
+        // ignore
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, [exp.id]);
+
+  const toggle = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    (async () => {
+    try {
       const { isBookmarked, addBookmark, removeBookmark } = await import("@/lib/storage");
-      const now = isBookmarked(exp.id);
-      if (now) removeBookmark(exp.id); else addBookmark(exp);
+      const now = Boolean(isBookmarked(exp.id));
+      if (now) removeBookmark(exp.id);
+      else addBookmark(exp);
       setSaved(!now);
-    })();
+    } catch {
+      // ignore
+    }
   };
 
   return (
