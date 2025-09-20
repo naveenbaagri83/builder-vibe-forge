@@ -16,7 +16,9 @@ export default function Index() {
       try {
         const { apiGet } = await import("@/lib/api");
         const [sr, ar] = await Promise.all([
-          apiGet(`/search?${new URLSearchParams({ query: "space biology" }).toString()}`),
+          apiGet(
+            `/search?${new URLSearchParams({ query: "space biology" }).toString()}`,
+          ),
           apiGet(`/articles`),
         ]);
         setExperiments(sr as SearchResponse);
@@ -37,13 +39,15 @@ export default function Index() {
             Space Biology Knowledge Engine
           </h1>
           <p className="mt-4 text-slate-300 max-w-2xl mx-auto">
-            Ask questions about GeneLab, LSDA, OSDR, CMR and more. We search NASA sources first, then Gemini fills in the gaps.
+            Ask questions about GeneLab, LSDA, OSDR, CMR and more. We search
+            NASA sources first, then Gemini fills in the gaps.
           </p>
           <div className="mt-8 max-w-3xl mx-auto">
             <ChatPanel />
           </div>
           <div className="mt-6 text-sm text-slate-400">
-            Always returns: short summary, detailed answer, numbered sources, and 2 follow-up queries.
+            Always returns: short summary, detailed answer, numbered sources,
+            and 2 follow-up queries.
           </div>
         </div>
       </section>
@@ -52,7 +56,12 @@ export default function Index() {
       <section className="container mx-auto px-6 py-14">
         <div className="flex items-end justify-between gap-4 mb-6">
           <h2 className="text-2xl font-bold">Dashboard</h2>
-          <Link to="/dashboard" className="text-indigo-600 hover:text-indigo-700 underline">Open full dashboard</Link>
+          <Link
+            to="/dashboard"
+            className="text-indigo-600 hover:text-indigo-700 underline"
+          >
+            Open full dashboard
+          </Link>
         </div>
         <Dashboard />
       </section>
@@ -61,14 +70,18 @@ export default function Index() {
       <section className="container mx-auto px-6 py-14">
         <div className="flex items-end justify-between gap-4 mb-6">
           <h2 className="text-2xl font-bold">Experiments</h2>
-          <div className="text-sm text-muted-foreground">From NASA OSDR / GeneLab / CMR</div>
+          <div className="text-sm text-muted-foreground">
+            From NASA OSDR / GeneLab / CMR
+          </div>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {experiments?.results?.slice(0, 6).map((e) => (
             <ExperimentCard key={e.id} exp={e} />
           ))}
           {!experiments?.results?.length && (
-            <p className="text-sm text-muted-foreground">No experiments to display.</p>
+            <p className="text-sm text-muted-foreground">
+              No experiments to display.
+            </p>
           )}
         </div>
       </section>
@@ -77,7 +90,9 @@ export default function Index() {
       <section className="container mx-auto px-6 py-14">
         <div className="flex items-end justify-between gap-4 mb-6">
           <h2 className="text-2xl font-bold">Your activity</h2>
-          <div className="text-sm text-muted-foreground">Recent searches and saved items</div>
+          <div className="text-sm text-muted-foreground">
+            Recent searches and saved items
+          </div>
         </div>
         <HistoryBookmarks />
       </section>
@@ -86,7 +101,12 @@ export default function Index() {
       <section className="container mx-auto px-6 py-14">
         <div className="flex items-end justify-between gap-4 mb-6">
           <h2 className="text-2xl font-bold">Articles</h2>
-          <Link to="/articles" className="text-indigo-600 hover:text-indigo-700 underline">See more</Link>
+          <Link
+            to="/articles"
+            className="text-indigo-600 hover:text-indigo-700 underline"
+          >
+            See more
+          </Link>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {articles?.items.slice(0, 6).map((a) => (

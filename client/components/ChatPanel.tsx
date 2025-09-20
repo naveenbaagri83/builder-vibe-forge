@@ -69,7 +69,9 @@ export default function ChatPanel() {
             </section>
             <section>
               <h3 className="font-semibold mb-1">Detailed answer</h3>
-              <p className="text-slate-200/90 whitespace-pre-wrap leading-relaxed">{data.detailedAnswer}</p>
+              <p className="text-slate-200/90 whitespace-pre-wrap leading-relaxed">
+                {data.detailedAnswer}
+              </p>
             </section>
             {data.sources?.length > 0 && (
               <section>
@@ -77,7 +79,12 @@ export default function ChatPanel() {
                 <ol className="list-decimal ml-5 space-y-1">
                   {data.sources.map((s) => (
                     <li key={s.index}>
-                      <a className="text-indigo-300 hover:text-indigo-200 underline" href={s.link} target="_blank" rel="noreferrer">
+                      <a
+                        className="text-indigo-300 hover:text-indigo-200 underline"
+                        href={s.link}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         {s.title}
                       </a>
                       <span className="text-slate-400 ml-2">[{s.source}]</span>
@@ -91,7 +98,9 @@ export default function ChatPanel() {
                 <h3 className="font-semibold mb-1">Suggested follow-ups</h3>
                 <ul className="list-disc ml-5 space-y-1">
                   {data.followUps.map((q, i) => (
-                    <li key={i} className="text-slate-200/90">{q}</li>
+                    <li key={i} className="text-slate-200/90">
+                      {q}
+                    </li>
                   ))}
                 </ul>
               </section>
