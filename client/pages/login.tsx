@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -10,16 +10,21 @@ export default function LoginPage() {
   const [showPw, setShowPw] = useState(false);
   const [remember, setRemember] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     if (!email || !password) {
       setError("Please enter email and password");
       return;
     }
-    // Wiring will be added later (Supabase/Auth provider)
-    alert(`Demo login submitted:\nEmail: ${email}\nRemember: ${remember}`);
+    const { setAuthed } = await import("@/lib/auth");
+    setAuthed(true);
+    const sp = new URLSearchParams(location.search);
+    const next = sp.get("next") || "/";
+    navigate(next);
   };
 
   return (
