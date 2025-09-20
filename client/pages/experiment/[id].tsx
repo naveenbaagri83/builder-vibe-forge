@@ -56,8 +56,20 @@ export default function ExperimentDetail() {
         <div className="grid md:grid-cols-3 gap-6">
           <div className="md:col-span-2">
             <Card>
-              <CardHeader>
+              <CardHeader className="flex flex-col gap-2">
                 <CardTitle className="text-2xl">{item.title}</CardTitle>
+                <div>
+                  <button
+                    onClick={async () => {
+                      const { isBookmarked, addBookmark, removeBookmark } = await import("@/lib/storage");
+                      if (isBookmarked(item.id)) removeBookmark(item.id); else addBookmark(item);
+                      // no state kept; HistoryBookmarks panel polls to reflect changes
+                    }}
+                    className="text-xs px-3 py-1 rounded-md bg-slate-900 text-slate-100 hover:bg-slate-800"
+                  >
+                    Toggle bookmark
+                  </button>
+                </div>
               </CardHeader>
               <CardContent>
                 {item.image && <img src={item.image} alt={item.title} className="w-full h-72 object-cover rounded-md mb-4" />}
