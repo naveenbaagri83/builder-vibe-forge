@@ -3,15 +3,27 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { ChatResponse } from "@shared/api";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function ChatPanel() {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<ChatResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const onAsk = async () => {
     if (!query.trim()) return;
+
+    // Require login before asking any question
+    const { isAuthed } = await import("@/lib/auth");
+    if (!isAuthed()) {
+      const next = encodeURIComponent(location.pathname + location.search);
+      navigate(`/login?next=${next}`);
+      return;
+    }
+
     setLoading(true);
     setError(null);
     setData(null);
