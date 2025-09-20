@@ -64,9 +64,12 @@ export default function Index() {
           <div className="text-sm text-muted-foreground">From NASA OSDR / GeneLab / CMR</div>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {experiments?.results.slice(0, 6).map((e) => (
+          {experiments?.results?.slice(0, 6).map((e) => (
             <ExperimentCard key={e.id} exp={e} />
           ))}
+          {!experiments?.results?.length && (
+            <p className="text-sm text-muted-foreground">No experiments to display.</p>
+          )}
         </div>
       </section>
 
