@@ -22,15 +22,29 @@ export async function apiFetch<T = any>(endpoint: string, init?: RequestInit): P
   const bases = CANDIDATE_BASES();
   let lastErr: any = null;
   for (const b of bases) {
-    const url = b + e;
-    try {
-      return await fetchJson<T>(url, init);
-    } catch (err: any) {
-      lastErr = err;
-      // If response was HTML, try next candidate
-      if (String(err.message).includes("Expected JSON but received")) continue;
-      // For other errors, also try next candidate (network issues)
-      continue;
+    const attempts = [] as string[];
+    // relative path
+    attempts.push(b + e);
+    // absolute with origin
+    if (typeof window !== "undefined") {
+      try {
+        attempts.push(window.location.origin + b + e);
+      } catch {}
+    }
+
+    for (const url of attempts) {
+      try {
+        // Log attempted URL for debugging in preview
+        // eslint-disable-next-line no-console
+        console.debug("apiFetch trying:", url);
+        return await fetchJson<T>(url, init);
+      } catch (err: any) {
+        lastErr = err;
+        // If response was HTML, try next candidate
+        if (String(err.message).includes("Expected JSON but received")) continue;
+        // For network errors or CORS, try next candidate
+        continue;
+      }
     }
   }
   // If we reach here, all candidate bases failed (likely API server not running in this environment)
