@@ -16,13 +16,13 @@ export default function ChatPanel() {
     setError(null);
     setData(null);
     try {
-      try {
-        const { apiPost } = await import("@/lib/api");
-        const json = await apiPost<ChatResponse>("/chat", { query });
-        setData(json as ChatResponse);
-      } catch (e: any) {
-        throw e;
-      }
+      const [{ apiPost }, { addSearchHistory }] = await Promise.all([
+        import("@/lib/api"),
+        import("@/lib/storage"),
+      ]);
+      addSearchHistory(query);
+      const json = await apiPost<ChatResponse>("/chat", { query });
+      setData(json as ChatResponse);
     } catch (e: any) {
       setError(e.message || "Something went wrong");
     } finally {
