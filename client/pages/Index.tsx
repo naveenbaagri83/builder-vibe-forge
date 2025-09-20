@@ -69,6 +69,15 @@ export default function Index() {
         </div>
       </section>
 
+      {/* History & Bookmarks */}
+      <section className="container mx-auto px-6 py-14">
+        <div className="flex items-end justify-between gap-4 mb-6">
+          <h2 className="text-2xl font-bold">Your activity</h2>
+          <div className="text-sm text-muted-foreground">Recent searches and saved items</div>
+        </div>
+        <HistoryBookmarks />
+      </section>
+
       {/* Articles */}
       <section className="container mx-auto px-6 py-14">
         <div className="flex items-end justify-between gap-4 mb-6">
