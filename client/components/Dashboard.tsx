@@ -14,7 +14,12 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // initial load
+    // read ?q= from URL
+    try {
+      const sp = new URLSearchParams(window.location.search);
+      const q = sp.get("q");
+      if (q) setQuery(q);
+    } catch {}
     onSearch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -22,14 +27,16 @@ export default function Dashboard() {
   const onSearch = async () => {
     setLoading(true);
     try {
-      try {
-        const { apiGet } = await import("@/lib/api");
-        const qp = new URLSearchParams({ query });
-        const json = (await apiGet(`/search?${qp.toString()}`)) as SearchResponse;
-        setData(json);
-      } catch (e) {
-        console.error("Search failed:", e);
-      }
+      const [{ apiGet }, { addSearchHistory }] = await Promise.all([
+        import("@/lib/api"),
+        import("@/lib/storage"),
+      ]);
+      addSearchHistory(query);
+      const qp = new URLSearchParams({ query });
+      const json = (await apiGet(`/search?${qp.toString()}`)) as SearchResponse;
+      setData(json);
+    } catch (e) {
+      console.error("Search failed:", e);
     } finally {
       setLoading(false);
     }
