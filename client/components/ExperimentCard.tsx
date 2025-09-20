@@ -3,11 +3,29 @@ import type { SourceDoc } from "@shared/api";
 import { Link } from "react-router-dom";
 
 export default function ExperimentCard({ exp }: { exp: SourceDoc }) {
+  const [saved, setSaved] = useState<boolean>(() => {
+    try { return (require("@/lib/storage") as any).isBookmarked(exp.id); } catch { return false; }
+  });
+
+  const toggle = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    (async () => {
+      const { isBookmarked, addBookmark, removeBookmark } = await import("@/lib/storage");
+      const now = isBookmarked(exp.id);
+      if (now) removeBookmark(exp.id); else addBookmark(exp);
+      setSaved(!now);
+    })();
+  };
+
   return (
     <Link to={`/experiment/${encodeURIComponent(exp.id)}`}>
-      <Card className="hover:shadow-lg transition-shadow h-full">
+      <Card className="hover:shadow-lg transition-shadow h-full relative">
+        <button onClick={toggle} className={`absolute right-3 top-3 text-xs px-2 py-1 rounded-md ${saved ? "bg-amber-500 text-black" : "bg-slate-800 text-slate-100"}`} aria-label={saved ? "Remove bookmark" : "Add bookmark"}>
+          {saved ? "Bookmarked" : "Bookmark"}
+        </button>
         <CardHeader>
-          <CardTitle className="text-base line-clamp-2">{exp.title}</CardTitle>
+          <CardTitle className="text-base line-clamp-2 pr-20">{exp.title}</CardTitle>
         </CardHeader>
         <CardContent>
           {exp.image && (
