@@ -44,8 +44,12 @@ function buildNASAAnswer(query: string, docs: SourceDoc[]): ChatResponse {
 
 export const handleChat: RequestHandler = async (req, res) => {
   try {
-    const body = req.body as ChatRequest;
-    if (!body?.query) {
+    const anyBody = (req.method === "GET" ? req.query : req.body) as any;
+    const body: ChatRequest = {
+      query: String(anyBody?.query ?? anyBody?.q ?? ""),
+      filters: anyBody?.filters,
+    };
+    if (!body.query) {
       res.status(400).json({ error: "Missing query" });
       return;
     }
