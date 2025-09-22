@@ -70,6 +70,41 @@ export default function Dashboard() {
     return { x, y, text };
   }, [data]);
 
+
+  // Sources count
+  const sourcesCount = useMemo(() => {
+    const items = data?.results || [];
+    const count: Record<string, number> = {};
+    items.forEach((d) => {
+      count[d.source] = (count[d.source] || 0) + 1;
+    });
+    return count;
+  }, [data]);
+
+  // Organisms
+  const organisms = useMemo(() => {
+    const items = data?.results || [];
+    const orgs = Array.from(new Set(items.map((d) => d.organism).filter(Boolean)));
+    return orgs;
+  }, [data]);
+
+  // Recent experiments
+  const recentExperiments = useMemo(() => {
+    const items = data?.results || [];
+    return items.slice(0, 6);
+  }, [data]);
+
+  // Knowledge Graph (simple)
+  const knowledgeGraph = useMemo(() => {
+    const items = data?.results || [];
+    return items.map((d) => ({
+      title: d.title,
+      source: d.source,
+      organism: d.organism,
+      year: d.date ? new Date(d.date).getFullYear() : "Unknown",
+    }));
+  }, [data]);
+
   return (
     <div className="grid lg:grid-cols-3 gap-6">
       <Card className="lg:col-span-1">
@@ -82,6 +117,26 @@ export default function Dashboard() {
           <Input placeholder="Organism" value={organism} onChange={(e) => setOrganism(e.target.value)} />
           <Input placeholder="Assay type" value={assay} onChange={(e) => setAssay(e.target.value)} />
           <Button onClick={onSearch} disabled={loading}>{loading ? "Loading..." : "Apply"}</Button>
+        </CardContent>
+        <CardHeader>
+          <CardTitle>Sources</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul className="list-disc ml-4 text-sm">
+            {Object.entries(sourcesCount).map(([src, cnt]) => (
+              <li key={src}>{src}: <b>{cnt}</b></li>
+            ))}
+          </ul>
+        </CardContent>
+        <CardHeader>
+          <CardTitle>Organisms</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul className="list-disc ml-4 text-sm">
+            {organisms.map((org) => (
+              <li key={org}>{org}</li>
+            ))}
+          </ul>
         </CardContent>
       </Card>
       <Card className="lg:col-span-2">
@@ -108,6 +163,47 @@ export default function Dashboard() {
             config={{ displayModeBar: false, responsive: true }}
             style={{ width: "100%" }}
           />
+        </CardContent>
+      </Card>
+      <Card className="lg:col-span-2">
+        <CardHeader>
+          <CardTitle>Knowledge Graph (simple)</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <table className="min-w-full text-sm">
+              <thead>
+                <tr>
+                  <th className="px-2 py-1">Title</th>
+                  <th className="px-2 py-1">Source</th>
+                  <th className="px-2 py-1">Organism</th>
+                  <th className="px-2 py-1">Year</th>
+                </tr>
+              </thead>
+              <tbody>
+                {knowledgeGraph.map((row, i) => (
+                  <tr key={i} className="border-t">
+                    <td className="px-2 py-1">{row.title}</td>
+                    <td className="px-2 py-1">{row.source}</td>
+                    <td className="px-2 py-1">{row.organism}</td>
+                    <td className="px-2 py-1">{row.year}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
+      <Card className="lg:col-span-1">
+        <CardHeader>
+          <CardTitle>Recent Experiments</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul className="list-disc ml-4 text-sm">
+            {recentExperiments.map((exp) => (
+              <li key={exp.id}><b>{exp.title}</b> <span className="text-gray-500">({exp.date ? new Date(exp.date).getFullYear() : "Unknown"})</span></li>
+            ))}
+          </ul>
         </CardContent>
       </Card>
     </div>

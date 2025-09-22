@@ -12,6 +12,8 @@ import ExperimentDetail from "./pages/experiment/[id]";
 import DashboardPage from "./pages/dashboard";
 import ArticlesPage from "./pages/articles";
 import LoginPage from "./pages/login";
+import ChatBotPage from "./pages/chatbot";
+import DemoOne from "./pages/demo";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +28,8 @@ const App = () => (
           <Route path="/login" element={<LoginPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/articles" element={<ArticlesPage />} />
+          <Route path="/chatbot" element={<ChatBotPage />} />
+          <Route path="/demo" element={<DemoOne />} />
           <Route path="/experiment/:id" element={<ExperimentDetail />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

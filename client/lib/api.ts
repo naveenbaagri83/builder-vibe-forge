@@ -13,8 +13,9 @@ function isDevEnv() {
 // Try a set of candidate bases depending on environment (dev vs preview)
 const CANDIDATE_BASES = (isDev = isDevEnv()) => {
   if (isDev) return ["/api"];
-  // In production hosting, try standard /api (relies on redirects), then Netlify function explicit paths
-  return ["/api", "/.netlify/functions/api", "/.netlify/functions/api/api"];
+  // Use VITE_API_BASE from environment variables in production
+  const apiBase = (typeof import.meta !== "undefined" && (import.meta as any).env && (import.meta as any).env.VITE_API_BASE) || "/api";
+  return [apiBase];
 };
 
 export async function apiFetch<T = any>(endpoint: string, init?: RequestInit): Promise<T> {
