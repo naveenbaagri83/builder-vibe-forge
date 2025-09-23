@@ -2,6 +2,8 @@ import { defineConfig } from "vite";
 import path from "path";
 
 export default defineConfig({
+    base: '/builder-vibe-forge/', // 👈 GitHub Pages ke liye zaroori hai
+
     server: {
         fs: {
             allow: [
@@ -18,6 +20,7 @@ export default defineConfig({
             },
         },
     },
+
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "./client"),
